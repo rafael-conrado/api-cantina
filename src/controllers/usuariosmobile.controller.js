@@ -10,13 +10,18 @@ module.exports = {
         return res.json(user);
     },
     async create(req,res){
-        const { email_usuario } = req.body
+        try {
+            const { email_usuario } = req.body
 
-        if(await UsuarioMobile.findOne({ email_usuario })) {
-            return res.send({ error: "Usuário não encontrado" })
+            if(await UsuarioMobile.findOne({ email_usuario })) {
+                return res.send({ error: "Usuario já cadastrado" })
+            }
+            const usermobile = await UsuarioMobile.create(req.body)
+            return res.json(usermobile)
         }
-        const usermobile = await UsuarioMobile.create(req.body)
-        return res.json(usermobile)
+        catch(err) {
+            return res.send({ error: err.message })
+        }
     },    
     async details(req,res){
         const {_id} = req.params;
@@ -29,29 +34,34 @@ module.exports = {
         return res.json(user);
     },
     async update(req,res){
-        const {_id, nome_usuario, email_usuario, tipo_usuario, saldo_usuario} = req.body;
-        const data = { nome_usuario, email_usuario, tipo_usuario, saldo_usuario};
-        const user = await UsuarioMobile.findOneAndUpdate({_id}, data, {new:true});      
+        const { id } = req.params
+        const { saldo_usuario } = req.body
+        const user = await UsuarioMobile.findByIdAndUpdate(id, { saldo_usuario }, { new: true });      
         return res.json(user);
     },
     
     async loginmobile(req, res) {
-      const { email_usuario, senha_usuario } = req.body
+      try {
+        const { email_usuario, senha_usuario } = req.body
   
-      const user = await UsuarioMobile.findOne({ email_usuario })
-      if(!user) {
-          return res.send({ error: "Usuário não encontrado" })
+        const user = await UsuarioMobile.findOne({ email_usuario })
+        if(!user) {
+            return res.send({ error: "Usuário não encontrado" })
+        }
+    
+        if(!await bcrypt.compare(senha_usuario, user.senha_usuario)) {
+            return res.send({ error: "Senha inválida" })
+        }
+    
+        const token = jwt.sign({ id: user.id }, authConfig.secret, {
+            expiresIn: 86400
+        })
+    
+        return res.send({ user, token })
       }
-  
-      if(!await bcrypt.compare(senha_usuario, user.senha_usuario)) {
-          return res.send({ error: "Senha inválida" })
+      catch (err) {
+          return res.send({ error: err.message })
       }
-  
-      const token = jwt.sign({ id: user.id }, authConfig.secret, {
-          expiresIn: 86400
-      })
-  
-      return res.send({ user, token })
     }
 
 }

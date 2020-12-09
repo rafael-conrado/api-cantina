@@ -58,6 +58,7 @@ export default function UsuarioMobileEditar() {
   const [email, setEmail ] = useState('');
   const [saldo, setSaldo] = useState('');
   const [tipo, setTipo ] = useState('');
+  const [id, setId ] = useState('');
 
   const { idUsuarioMobile } = useParams();
  
@@ -84,16 +85,18 @@ export default function UsuarioMobileEditar() {
       _id:idUsuarioMobile
     }
 
-    if(nome!==''&&email!==''&&saldo!==''&&tipo!==''){
-      const response = await api.put('/api/usuariosmobile',data);
+    if(nome!==''&&email!==''&&saldo!=='s'&&tipo!==''){
+       api.patch(`/api/usuariosmobile/${idUsuarioMobile}`,{ saldo_usuario: saldo })
+        .then(res => console.log(res.data))
+        .catch(err => console.log(err))
 
-      if(response.status===200){
-        window.location.href='/admin/usuariosmobile'
-      }else{
-        alert('Erro a atualizar o usuário!');
-      }
-    }else{
-      alert('Por favor, preencha todos os dados!');
+    //   if(response.status===200){
+    //     window.location.href='/admin/usuariosmobile'
+    //   }else{
+    //     alert('Erro a atualizar o usuário!');
+    //   }
+    // }else{
+    //   alert('Por favor, preencha todos os dados!');
     }
   }
 

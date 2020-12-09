@@ -68,7 +68,7 @@ async function handleDelete(id){
   if(window.confirm("Deseja realmente excluir este usuário?")){
     var result = await api.delete('/api/usuariosmobile/'+id);
     if(result.status==200){
-      window.location.href = '/admin/usuarios/mobile';
+      window.location.href = '/admin/usuariosmobile';
     }else{
     alert('Ocorreu um erro. Por favor, tente novamente!');
   }

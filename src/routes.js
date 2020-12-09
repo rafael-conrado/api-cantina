@@ -1,4 +1,4 @@
-const express = require('express');
+ const express = require('express');
 const routes = express.Router();
 
 const Usuario = require('./controllers/usuarios.controller');
@@ -23,7 +23,7 @@ routes.post('/api/usuarios/loginmobile',UsuarioMobile.loginmobile);
 routes.get('/api/usuariosmobile',UsuarioMobile.index);
 routes.get('/api/usuariosmobile.details/:_id', UsuarioMobile.details);
 routes.delete('/api/usuariosmobile/:_id',UsuarioMobile.delete);
-routes.put('/api/usuariosmobile', UsuarioMobile.update);
+routes.patch('/api/usuariosmobile/:id', UsuarioMobile.update);
 
 // Rotas de Pedido
 routes.post('/api/pedidos/:id',Pedido.create);
